@@ -1,5 +1,6 @@
 import pymongo
 from flask import request, jsonify, Flask
+from bson import objectid
 from pymongo import MongoClient
 
 app = Flask(__name__)
@@ -120,8 +121,11 @@ def deleteContactBy():
 @app.route('/displayContact', methods=['GET'])
 def displayContact():
     contacts = dataBase.note.find()
-    contact_list = list(contacts)
-    return jsonify(contacts=contact_list)
+    contact_list = []
+    for contact in contacts:
+        contact['_id'] = str(contact['_id'])
+        contact_list.append(contact)
+    return jsonify(contact_list)
 
 
 if __name__ == '__main__':
